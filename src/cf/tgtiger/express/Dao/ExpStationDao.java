@@ -33,7 +33,7 @@ public interface ExpStationDao {
 
     String getPasswd(String expStaNum);
 
-    List<ExpStation> getGeoCodes(ExpStation es);
+    List<ExpStation> getGeoCodes(String province, String city, String area);
 
 //     Boolean updateGeoCodes(ExpStation es);
 }

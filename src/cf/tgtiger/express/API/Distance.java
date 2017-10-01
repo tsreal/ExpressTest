@@ -1,6 +1,9 @@
 package cf.tgtiger.express.API;
 
 
+import cf.tgtiger.express.Dao.ExpStationDao;
+import cf.tgtiger.express.Dao.ExpStationDaoImpl;
+import cf.tgtiger.express.bean.ExpStation;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -11,6 +14,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 /*
 高德:
 渊智园:112.586276,37.805769
@@ -33,41 +37,44 @@ public class Distance {
 
 
 
-        String info = "112.586276,37.805769|112.591339,37.796514";
+        String info = "112.586276,37.805769|112.591339,37.796514|112.586276,37.805769|112.591339,37.796514|112.586276,37.805769|112.591339,37.796514";
         String destination = "112.590866,37.797539";
-        System.out.println(GetDistance(info,destination));
+//        System.out.println(GetDistance(info,destination));
     }
-    public static String GetDistance(String start, String destination) {
+    public static JSONObject GetDistance(String destination,String province, String city ,String area) {
 
-        OutputStream out = null;
-//        BufferedReader in = null;
-        String json_rec = null;
 
-        try {
-            String api_distance = "http://restapi.amap.com/v3/distance?type=3&key=2d324f28d8ccf0f6b4a27c8c4615e0cf&origins="
-                    + start  +"&destination="+destination;
-            URL url = new URL(api_distance);
-            //设置通用请求属性
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            //发送post必须设置以下两行
-//        conn.setDoInput(true);
-//        conn.setDoOutput(true);
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("charset", "UTF-8");
 
-            json_rec = IOUtils.toString(conn.getInputStream(), "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        ExpStationDao dao = new ExpStationDaoImpl();
+        List<ExpStation> list = dao.getGeoCodes(province, city, area);
+        String start = "";
+        if (list.size() != 0) {
+            start = list.get(0).getGeocodes();
+            for (int i = 1; i < list.size(); i++) {
+                start += ("|" + list.get(i).getGeocodes());
             }
+        }else {
+            return null;
         }
-        return json_rec;
+
+        String api_distance = "http://restapi.amap.com/v3/distance?type=3&key=2d324f28d8ccf0f6b4a27c8c4615e0cf&origins="
+                + start + "&destination=" + destination;
+
+        String json_rec = GetResponse.getResult(api_distance);
+        JSONObject jo = JSON.parseObject(json_rec);
+        String results = jo.getString("results");
+        JSONArray jsonArray = JSON.parseArray(results);
+
+        JSONObject json = new JSONObject();
+
+
+        for(int i=0; i<jsonArray.size(); i++) {
+
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String distance = jsonObject.getString("distance");
+            json.put(list.get(i).getExpStationName(), distance);
+        }
+        return json;
     }
 
 }

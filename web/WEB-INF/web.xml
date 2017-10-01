@@ -60,6 +60,10 @@
         <servlet-name>getUserInfoByPhone</servlet-name>
         <servlet-class>cf.tgtiger.express.GetUserInfoByPhone</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>getDistance</servlet-name>
+        <servlet-class>cf.tgtiger.express.GetDistance</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>addExpress</servlet-name>
         <url-pattern>/servlet/addExpress</url-pattern>
@@ -115,5 +119,9 @@
     <servlet-mapping>
         <servlet-name>getUserInfoByPhone</servlet-name>
         <url-pattern>/servlet/getUserInfoByPhone</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>getDistance</servlet-name>
+        <url-pattern>/servlet/getDistance</url-pattern>
     </servlet-mapping>
 </web-app>
