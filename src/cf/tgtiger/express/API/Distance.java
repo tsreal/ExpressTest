@@ -41,17 +41,17 @@ public class Distance {
         String destination = "112.590866,37.797539";
 //        System.out.println(GetDistance(info,destination));
     }
-    public static JSONObject GetDistance(String destination,String province, String city ,String area) {
+    public static JSONArray GetDistance(String destination,String province, String city ,String area) {
 
 
 
         ExpStationDao dao = new ExpStationDaoImpl();
         List<ExpStation> list = dao.getGeoCodes(province, city, area);
-        String start = "";
+        StringBuilder start;
         if (list.size() != 0) {
-            start = list.get(0).getGeocodes();
+            start = new StringBuilder(list.get(0).getGeocodes());
             for (int i = 1; i < list.size(); i++) {
-                start += ("|" + list.get(i).getGeocodes());
+                start.append("|").append(list.get(i).getGeocodes());
             }
         }else {
             return null;
@@ -65,16 +65,19 @@ public class Distance {
         String results = jo.getString("results");
         JSONArray jsonArray = JSON.parseArray(results);
 
-        JSONObject json = new JSONObject();
-
+        JSONArray ja = new JSONArray();
 
         for(int i=0; i<jsonArray.size(); i++) {
 
+            JSONObject json = new JSONObject();
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             String distance = jsonObject.getString("distance");
-            json.put(list.get(i).getExpStationName(), distance);
+            json.put("expStationNum", list.get(i).getExpStationNum());
+            json.put("expStationName", list.get(i).getExpStationName());
+            json.put("distance", distance);
+            ja.add(json);
         }
-        return json;
+        return ja;
     }
 
 }
