@@ -1,4 +1,4 @@
-//package cf.tgtiger.express.API;
+package cf.tgtiger.express.API;
 //import com.alibaba.fastjson.JSON;
 //import com.alibaba.fastjson.JSONArray;
 //import com.alibaba.fastjson.JSONObject;
@@ -80,15 +80,16 @@ public class GeoCode {
     public static void main(String[] args) {
         String address = "山西省太原市小店区山西大学家属区18号楼";
         String queryResult = GeoCode.getLonLat(address);
-        System.out.println(queryResult);
+
     }
 
 
     //获取经纬度
-    private static String getLonLat(String address){
+    public static String getLonLat(String address){
         //返回输入地址address的经纬度信息, 格式是 经度,纬度
         String queryUrl = "http://restapi.amap.com/v3/geocode/geo?key=2d324f28d8ccf0f6b4a27c8c4615e0cf&address="+address;
         String queryResult = getResponse(queryUrl);  //高德接口返回的是JSON格式的字符串
+        System.out.println(queryResult);
         JSONObject jo = JSON.parseObject(queryResult);
         String geocodes = jo.getString("geocodes");
         JSONArray jsonArray = JSONArray.parseArray(geocodes);
@@ -138,22 +139,25 @@ public class GeoCode {
 
     }
     //api查询通用接口,返回请求结果
-    private static String getResponse(String serverUrl){
+    public static String getResponse(String serverUrl){
+        System.out.println(serverUrl);
         //用JAVA发起http请求，并返回json格式的结果
 
         //返回结果集
         StringBuffer document = new StringBuffer();
         //链接URL
         try {
+
             URL url = new URL(serverUrl);
             //创建链接
             URLConnection conn = url.openConnection();
             //读取返回结果集
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
 
             String line;
             while((line = reader.readLine()) != null){
                 document.append(line);
+                System.out.println(document);
             }
             reader.close();
         } catch (IOException e) {

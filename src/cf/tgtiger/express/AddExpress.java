@@ -73,7 +73,7 @@ public class AddExpress extends HttpServlet{
                     json.put("expressNum", epk.getExpressNum());
 //                    json.put("firstPk", epk.getFirstPk());
 //                    json.put("firstSk", epk.getFirstSk());
-//                    json.put("encryptNum", epk.getEncryptNum());
+                    json.put("encryptNum", epk.getEncryptNum());
 //                    json.put("secondPk", epk.getSecondPk());
 //                    json.put("secondSk", epk.getSecondSk());
 //                    json.put("secondDesK", epk.getSecondDesK());

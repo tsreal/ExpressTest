@@ -26,10 +26,16 @@ public class ExpStationDaoImpl implements ExpStationDao{
     public static void main(String[] args) {
         ExpStationDao dao = new ExpStationDaoImpl();
         ExpStation es = new ExpStation();
-        es.setStaAddress("山西省太原市小店区山西大学家属区");
-        es.setExpStationNum("sxll00002");
+        es.setStaAddress("山西省太原市小店区山西大学令德餐厅");
+        es.setExpStationNum("SXTYXD00003");
+        es.setProvince("山西省");
+        es.setCity("太原市");
+        es.setAreas("小店区");
+        es.setGeocodes((GeoCode.getLonLat(es.getStaAddress())));
+        es.setExpStationName("山大顺丰速递");
+        es.setPassword("123");
+        dao.addStaInfo(es);
 
-//        dao.updateGeoCodes(es);
 
 //        ExpStationDao dao = new ExpStationDaoImpl();
 //        ExpStation epsta = new ExpStation();
@@ -60,9 +66,7 @@ public class ExpStationDaoImpl implements ExpStationDao{
 //        System.out.println("fpk:" + fpk + "\nfsk:" + fsk + "\ni: " + i);
 //        ExpStationDao dao = new ExpStationDaoImpl();
 //        ExpStation es = new ExpStation();
-//        es.setProvince("山西省");
-//        es.setCity("太原市");
-//        es.setAreas("小店区");
+
 //
 //        List list = new ArrayList<>();
 //        list = dao.getGeoCodes(es);
@@ -91,6 +95,8 @@ public class ExpStationDaoImpl implements ExpStationDao{
             conn = DBUtil.getExpConnection();
             pstmt = conn.prepareStatement(sql);
 
+//            String geocodes = GeoCode.getLonLat(es.getStaAddress());
+
             pstmt.setString(1,es.getExpStationNum());
             pstmt.setString(2,es.getExpStationName());
             //存入数据库的是第一类公私密钥对的base64编码
@@ -102,6 +108,7 @@ public class ExpStationDaoImpl implements ExpStationDao{
             pstmt.setString(8,es.getProvince());
             pstmt.setString(9,es.getCity());
             pstmt.setString(10,es.getAreas());
+//            pstmt.setString(11,es.getGeocodes());
             pstmt.setString(11,es.getGeocodes());
 
             pstmt.execute();
@@ -324,23 +331,19 @@ public class ExpStationDaoImpl implements ExpStationDao{
     }
 
     @Override
-    public List<ExpStation> getGeoCodes(ExpStation es) {
+    public List<ExpStation> getGeoCodes(String province, String city, String area) {
         String sql = "select expStationNum,expStationName,geocodes from exp_station_keys where province=? and city=? and areas=?;";
         List<ExpStation> eslist = null;
         try {
             conn = DBUtil.getExpConnection();
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,es.getProvince());
-            pstmt.setString(2,es.getCity());
-            pstmt.setString(3,es.getAreas());
+            pstmt.setString(1,province);
+            pstmt.setString(2,city);
+            pstmt.setString(3,area);
 
             rs = pstmt.executeQuery();
             eslist = (List<ExpStation>)DBUtil.rsToObj(rs, ExpStation.class);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (SQLException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         } finally {
             DBUtil.closeAll(rs,pstmt,conn);
