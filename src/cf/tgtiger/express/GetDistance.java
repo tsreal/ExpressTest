@@ -4,6 +4,7 @@ import cf.tgtiger.express.API.Distance;
 import cf.tgtiger.express.Dao.ExpStationDao;
 import cf.tgtiger.express.Dao.ExpStationDaoImpl;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.IOUtils;
 
@@ -29,9 +30,12 @@ public class GetDistance extends HttpServlet{
         String area = json_rec.getString("area");
         ExpStationDao dao = new ExpStationDaoImpl();
 
-        JSONObject json = new JSONObject();
-        json = Distance.GetDistance(destination,province,city,area);
-        out.print(json.toString());
+        new JSONArray();
+        JSONArray jsonArray;
+        jsonArray = Distance.GetDistance(destination,province,city,area);
+        if (jsonArray != null) {
+            out.print(jsonArray.toString());
+        }
         out.flush();
         out.close();
 
