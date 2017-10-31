@@ -51,15 +51,20 @@ public class GenExpNumsDaoImpl implements GenExpNumsDao{
         String s1="690";
         int num1=0;
         for(int i=0;i<4;i++) {
-            num1=num1*10+(int)( Math.random()*10);
+            num1=num1*10+(int)(( Math.random()+0.1)*10);
+        }
+        if(num1>9999) {
+            num1=num1/10;
         }
         String snum1=String.valueOf(num1);
         int num2=0;
         for(int i=0;i<5;i++) {
-            num2=num2*10+(int)( Math.random()*10);
+            num2=num2*10+(int)( (Math.random()+0.1)*10);
+        }
+        if(num2>99999) {
+            num2=num2/10;
         }
         String snum2=String.valueOf(num2);
-
         String num=s1+snum1+snum2;
 
         char[] array=num.toCharArray();

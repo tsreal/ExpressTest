@@ -139,7 +139,7 @@ public class GeoCode {
 
     }
     //api查询通用接口,返回请求结果
-    public static String getResponse(String serverUrl){
+    private static String getResponse(String serverUrl){
         System.out.println(serverUrl);
         //用JAVA发起http请求，并返回json格式的结果
 

@@ -14,14 +14,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
-import static cf.tgtiger.express.Encrypt.GenRsaKey.getPrivateKey;
-import static cf.tgtiger.express.Encrypt.GenRsaKey.getPublicKey;
-import static cf.tgtiger.express.Encrypt.GenRsaKey.init;
+import static cf.tgtiger.express.Encrypt.GenRsaKey.*;
 
 public class ExpStationDaoImpl implements ExpStationDao{
-    Connection conn = null;
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
+    private Connection conn = null;
+    private PreparedStatement pstmt = null;
+    private ResultSet rs = null;
 
     public static void main(String[] args) {
         ExpStationDao dao = new ExpStationDaoImpl();
@@ -86,8 +84,8 @@ public class ExpStationDaoImpl implements ExpStationDao{
     @Override
     public boolean addStaInfo(ExpStation es) {
         String sql = "insert into exp_station_keys(expStationNum,expStationName,firstPk,firstSk,updatetime,password,expStationAdr,province,city,areas,geocodes) values(?,?,?,?,?,?,?,?,?,?,?)";
-        Map<String, Object> map = new HashMap<String, Object>();
-		map = init();
+        Map<String, Object> map;
+		map = init1();
         try {
 
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -187,8 +185,8 @@ public class ExpStationDaoImpl implements ExpStationDao{
     @Override
     public boolean updateFirstKeys(String expstanum) {
          String sql = "UPDATE exp_station_keys set firstPk := ?, firstSk := ?,updatetime := ? where expStationNum =?";
-        Map<String, Object> map = new HashMap<String, Object>();
-		map = init();
+        Map<String, Object> map;
+		map = init1();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String nowDate = sdf.format(new Date());
         try {
